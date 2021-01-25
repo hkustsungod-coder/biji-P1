@@ -1,5 +1,5 @@
 # biji-P1
-记事本开发用到的所有代码都在这里。按branch分p，欢迎取阅
+记事本开发用到的所有代码都在这里。按branch分p，欢迎取阅 （master就是P1）
 
 嗨，朋友们。年更up给您磕头了。duangduangduang～
 
