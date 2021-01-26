@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_Toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        app:titleTextColor="?attr/titleColor"
+        android:theme="?attr/toolbarTheme"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        >
+
+    </androidx.appcompat.widget.Toolbar>
     <EditText
         android:id="@+id/et"
         android:layout_width="match_parent"
@@ -10,5 +25,4 @@
         android:gravity="top">
 
     </EditText>
-
 </LinearLayout>
