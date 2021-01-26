@@ -6,6 +6,8 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.View;
 import android.widget.EditText;
 
 import java.text.SimpleDateFormat;
@@ -38,6 +40,14 @@ public class EditActivity extends BaseActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); //设置toolbar取代actionbar
 
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                autoSetMessage();
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
         et = findViewById(R.id.et);
         Intent getIntent = getIntent();
         int openMode = getIntent.getIntExtra("mode", 0);
@@ -53,15 +63,18 @@ public class EditActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.edit_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
     public boolean onKeyDown(int keyCode, KeyEvent event){
         if (keyCode == KeyEvent.KEYCODE_HOME){
             return true;
         }
         else if (keyCode == KeyEvent.KEYCODE_BACK){
             autoSetMessage();
-            //Intent intent = new Intent();
-            //intent.putExtra("content", et.getText().toString());
-            //intent.putExtra("time", dateToStr());
             setResult(RESULT_OK, intent);
             finish();
             return true;

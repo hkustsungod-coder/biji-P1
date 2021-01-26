@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -46,6 +47,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         setSupportActionBar(myToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); //设置toolbar取代actionBar
+
+        myToolbar.setNavigationIcon(R.drawable.ic_menu_black_24dp);
 
         lv.setOnItemClickListener(this);
 
@@ -105,6 +108,12 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         op.close();
         refreshListView();*/
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     public void refreshListView(){
