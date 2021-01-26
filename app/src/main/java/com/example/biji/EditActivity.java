@@ -1,12 +1,16 @@
 package com.example.biji;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -50,7 +54,7 @@ public class EditActivity extends BaseActivity {
         });
         et = findViewById(R.id.et);
         Intent getIntent = getIntent();
-        int openMode = getIntent.getIntExtra("mode", 0);
+        openMode = getIntent.getIntExtra("mode", 0);
 
         if (openMode == 3) {//打开已存在的note
             id = getIntent.getLongExtra("id", 0);
@@ -67,6 +71,37 @@ public class EditActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.edit_menu, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.delete:
+                new AlertDialog.Builder(EditActivity.this)
+                        .setMessage("删除吗？")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (openMode == 4){ // new note
+                                    intent.putExtra("mode", -1);
+                                    setResult(RESULT_OK, intent);
+                                }
+                                else { // existing note
+                                    intent.putExtra("mode", 2);
+                                    intent.putExtra("id", id);
+                                    setResult(RESULT_OK, intent);
+                                }
+                                finish();
+                            }
+                        }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create().show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event){

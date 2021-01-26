@@ -1,13 +1,18 @@
 package com.example.biji;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -94,6 +99,13 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             op.open();
             op.addNote(newNote);
             op.close();
+        }else if (returnMode == 2) { // delete
+            Note curNote = new Note();
+            curNote.setId(note_Id);
+            CRUD op = new CRUD(context);
+            op.open();
+            op.removeNote(curNote);
+            op.close();
         }else{
 
         }
@@ -114,6 +126,33 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_clear:
+                new AlertDialog.Builder(MainActivity.this)
+                        .setMessage("删除全部吗？")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dbHelper = new NoteDatabase(context);
+                                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                                db.delete("notes", null, null);
+                                db.execSQL("update sqlite_sequence set seq=0 where name='notes'");
+                                refreshListView();
+                            }
+                        }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create().show();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void refreshListView(){
