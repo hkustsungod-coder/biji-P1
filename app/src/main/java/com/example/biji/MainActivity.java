@@ -5,18 +5,29 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.LayoutInflaterCompat;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -38,12 +49,23 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     private List<Note> noteList = new ArrayList<Note>();
     private Toolbar myToolbar;
 
+
+    //弹出菜单
+    private PopupWindow popupWindow;
+    private PopupWindow popupCover;
+    private ViewGroup customView;
+    private ViewGroup coverView;
+    private LayoutInflater layoutInfater;
+    private RelativeLayout main;
+    private WindowManager wm;
+    private DisplayMetrics metrics;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         btn = findViewById(R.id.fab);
-        // tv = findViewById(R.id.tv);
         lv = findViewById(R.id.lv);
         myToolbar = findViewById(R.id.myToolbar);
         adapter = new NoteAdapter(getApplicationContext(), noteList);
@@ -53,8 +75,15 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         setSupportActionBar(myToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); //设置toolbar取代actionBar
-
+        initPopUpView();
         myToolbar.setNavigationIcon(R.drawable.ic_menu_black_24dp);
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: shit");
+                showPopUpView();
+            }
+        });
 
         lv.setOnItemClickListener(this);
 
@@ -66,6 +95,53 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
                 intent.putExtra("mode", 4);
                 startActivityForResult(intent, 0);
             }
+        });
+
+    }
+
+    public void initPopUpView(){
+        layoutInfater = (LayoutInflater)MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        customView = (ViewGroup) layoutInfater.inflate(R.layout.setting_layout, null);
+        coverView = (ViewGroup) layoutInfater.inflate(R.layout.setting_cover, null);
+        main = findViewById(R.id.main_layout);
+        wm = getWindowManager();
+        metrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(metrics);
+    }
+
+    public void showPopUpView(){
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+
+        popupCover = new PopupWindow(coverView, width, height, false);
+        popupWindow = new PopupWindow(customView, (int)(width*0.7), height, true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+
+        //在主界面加载成功之后 显示弹出
+        findViewById(R.id.main_layout).post(new Runnable() {
+            @Override
+            public void run() {
+                popupCover.showAtLocation(main, Gravity.NO_GRAVITY, 0, 0);
+                popupWindow.showAtLocation(main, Gravity.NO_GRAVITY, 0, 0);
+
+                coverView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        popupWindow.dismiss();
+                        return true;
+                    }
+                });
+
+                popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        popupCover.dismiss();
+                        Log.d(TAG, "onDismiss: test");
+                    }
+                });
+            }
+
+
         });
     }
 
