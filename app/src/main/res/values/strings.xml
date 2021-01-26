@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">biji</string>
+    <string name="pref_night_summary">这是黑夜模式哦~</string>
 </resources>

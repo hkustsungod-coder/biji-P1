@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -59,6 +60,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     private RelativeLayout main;
     private WindowManager wm;
     private DisplayMetrics metrics;
+    private TextView setting_text;
+    private ImageView setting_image;
 
 
     @Override
@@ -123,6 +126,23 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             public void run() {
                 popupCover.showAtLocation(main, Gravity.NO_GRAVITY, 0, 0);
                 popupWindow.showAtLocation(main, Gravity.NO_GRAVITY, 0, 0);
+
+                setting_image = customView.findViewById(R.id.setting_settings_image);
+                setting_text = customView.findViewById(R.id.setting_settings_text);
+
+                setting_image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(MainActivity.this, UserSettingsActivity.class));
+                    }
+                });
+
+                setting_text.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(MainActivity.this, UserSettingsActivity.class));
+                    }
+                });
 
                 coverView.setOnTouchListener(new View.OnTouchListener() {
                     @Override
