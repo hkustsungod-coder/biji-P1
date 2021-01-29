@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -65,6 +66,14 @@ public class EditActivity extends BaseActivity {
             et.setSelection(old_content.length());
 
         }
+    }
+
+    @Override
+    protected void needRefresh() {
+        Log.d(TAG, "needRefresh: Edit");
+        setNightMode();
+        Intent intent = new Intent(this, EditActivity.class);
+        startActivity(intent);
     }
 
     @Override

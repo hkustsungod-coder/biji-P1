@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
@@ -33,8 +35,23 @@ public class UserSettingsActivity extends BaseActivity {
         setSupportActionBar(myToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        if(isNightMode()) myToolbar.setNavigationIcon(getDrawable(R.drawable.ic_settings_white_24dp));
-        else myToolbar.setNavigationIcon(getDrawable(R.drawable.ic_settings_black_24dp));
+
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction("NIGHT_SWITCH");
+                sendBroadcast(intent);
+                finish();
+            }
+        });
+//        if(isNightMode()) myToolbar.setNavigationIcon(getDrawable(R.drawable.ic_settings_white_24dp));
+//        else myToolbar.setNavigationIcon(getDrawable(R.drawable.ic_settings_black_24dp));
+    }
+
+    @Override
+    protected void needRefresh() {
+        Log.d(TAG, "needRefresh: UserSettings");
     }
 
     public void initView(){
@@ -67,5 +84,18 @@ public class UserSettingsActivity extends BaseActivity {
 
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+            Intent intent = new Intent();
+            intent.setAction("NIGHT_SWITCH");
+            sendBroadcast(intent);
+            finish();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 }

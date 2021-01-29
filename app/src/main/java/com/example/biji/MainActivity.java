@@ -16,6 +16,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -68,6 +69,11 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.lvBackground, typedValue, true);
+        Log.d(TAG, "onCreate: " + typedValue.data + " " + typedValue.resourceId);
+        Log.d(TAG, "onCreate: " + getTheme().toString());
+
         btn = findViewById(R.id.fab);
         lv = findViewById(R.id.lv);
         myToolbar = findViewById(R.id.myToolbar);
@@ -100,6 +106,15 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             }
         });
 
+    }
+
+    @Override
+    protected void needRefresh() {
+        Log.d(TAG, "needRefresh: Main");
+        setNightMode();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     public void initPopUpView(){
@@ -296,6 +311,19 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
                 startActivityForResult(intent, 1);      //collect data from edit
                 Log.d(TAG, "onItemClick: " + position);
                 break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (popupWindow != null && popupWindow.isShowing()) {
+            popupWindow.dismiss();
+            popupWindow = null;
+        }
+        if (popupCover != null && popupCover.isShowing()) {
+            popupCover.dismiss();
+            popupCover = null;
         }
     }
 }
