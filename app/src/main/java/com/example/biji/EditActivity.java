@@ -40,7 +40,7 @@ public class EditActivity extends BaseActivity {
 
         et = findViewById(R.id.et);
         Intent getIntent = getIntent();
-        int openMode = getIntent.getIntExtra("mode", 0);
+        openMode = getIntent.getIntExtra("mode", 0);
 
         if (openMode == 3) {//打开已存在的note
             id = getIntent.getLongExtra("id", 0);
